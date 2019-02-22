@@ -1,0 +1,116 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'kotlin-android-extensions'
+
+def sdk = [
+        min    : 21,
+        compile: 28,
+        target : 28
+]
+def version = [
+        multidex    : '1.0.3',
+        kotlin      : '1.2.60',
+        support     : '28.0.0',
+        constraint  : '1.1.2',
+        dagger      : '2.16',
+        moxy        : '1.5.3',
+        butterknife : '8.8.1',
+        rxjava      : '2.1.4',
+        rxandroid   : '2.0.2',
+        retrofit    : '2.3.0',
+        okhttplogger: '3.9.1',
+        gson        : '2.8.1',
+
+]
+def testVersion = [
+        junit   : '4.12',
+        runner  : '1.0.2',
+        espresso: '3.0.2'
+]
+
+android {
+    compileSdkVersion sdk.compile
+
+    compileOptions.encoding = 'UTF-8'
+
+    defaultConfig {
+        applicationId "com.azharkova.gitsearcher"
+        minSdkVersion sdk.min
+        targetSdkVersion sdk.target
+        versionName "1.0.1"
+        versionCode getVersionCode(versionName)
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary true
+        multiDexEnabled true
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def projectName = variant.applicationId
+            def sep = "_"
+            def buildType = variant.variantData.variantConfiguration.buildType.name
+            def flavorType = variant.flavorName
+
+            def versionCode = "v" + variant.versionCode
+
+            def apkName = projectName + sep + flavorType + sep + buildType + sep + versionCode + ".apk"
+            output.outputFileName = "${apkName}"
+        }
+    }
+}
+kapt {
+    generateStubs = true
+}
+dependencies {
+    implementation "com.android.support:multidex:${version.multidex}"
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${version.kotlin}"
+
+    implementation "com.android.support:appcompat-v7:${version.support}"
+
+    implementation "com.android.support:recyclerview-v7:${version.support}"
+    implementation "com.android.support:cardview-v7:${version.support}"
+    implementation "com.android.support:design:${version.support}"
+    implementation "com.android.support.constraint:constraint-layout:${version.constraint}"
+
+    implementation "com.google.dagger:dagger:${version.dagger}"
+    implementation "com.google.dagger:dagger-android:${version.dagger}"
+    implementation "com.google.dagger:dagger-android-support:${version.dagger}"
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    kapt "com.google.dagger:dagger-android-processor:${version.dagger}"
+    kapt "com.google.dagger:dagger-compiler:${version.dagger}"
+
+    implementation "com.arello-mobile:moxy:${version.moxy}"
+    implementation "com.arello-mobile:moxy-android:${version.moxy}"
+    implementation "com.arello-mobile:moxy-app-compat:${version.moxy}"
+    kapt "com.arello-mobile:moxy-compiler:${version.moxy}"
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation "com.jakewharton:butterknife:${version.butterknife}"
+    kapt "com.jakewharton:butterknife-compiler:${version.butterknife}"
+
+    implementation "io.reactivex.rxjava2:rxjava:${version.rxjava}"
+    implementation "io.reactivex.rxjava2:rxandroid:${version.rxandroid}"
+
+    implementation "com.squareup.retrofit2:retrofit:${version.retrofit}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${version.retrofit}"
+    implementation "com.squareup.retrofit2:converter-gson:${version.retrofit}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${version.okhttplogger}"
+    implementation "com.google.code.gson:gson:${version.gson}"
+    testImplementation "junit:junit:${testVersion.junit}"
+    androidTestImplementation "com.android.support.test:runner:${testVersion.runner}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${testVersion.espresso}"
+}
+
+
+private int getVersionCode(versionName) {
+    def (major, minor, patch) = versionName.toLowerCase().tokenize('.')
+
+    (major, minor, patch) = [major, minor, patch].collect { it.toInteger() }
+
+    (major * 1000000) + (minor * 1000) + patch
+}

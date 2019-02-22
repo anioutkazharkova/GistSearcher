@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Gist Searcher</string>
+    <string name="text_activity_gist_item_files">Files</string>
+    <string name="text_activity_gist_item_commits">Commits</string>
+    <string name="text_activity_gist_item_deletions">Deletions</string>
+    <string name="text_activity_gist_item_additions">Additions</string>
+    <string name="text_activity_gist_item_total">Total</string>
+
+    <string name="text_activity_gist_list_title">Gists and users</string>
+    <string name="text_activity_gist_item_title">Gist info</string>
+    <string name="text_activity_gist_user_title">User\'s gists</string>
+</resources>
